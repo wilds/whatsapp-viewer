@@ -2,9 +2,8 @@
 <html>
 
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="WhatsApp Viewer : " />
+    <meta charset="utf-8" />
+    <meta name="description" content="WhatsApp Viewer" />
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
@@ -29,7 +28,7 @@
           <a id="forkme_banner" href="https://github.com/andreas-mausch/whatsapp-viewer">View on GitHub</a>
 
           <h1 id="project_title">WhatsApp Viewer</h1>
-          <h2 id="project_tagline"></h2>
+          <h2 id="project_tagline">by Andreas Mausch</h2>
 
             <section id="downloads">
               <a class="download_link" href="https://github.com/andreas-mausch/whatsapp-viewer/zipball/master">source</a>
@@ -41,7 +40,8 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <p>Small tool to display chats from the Android msgstore.db.crypt5, .crypt7 and .crypt8 database.</p>
+        <p>Small tool to display chats from the Android msgstore.db.<br>
+	Supported versions are crypt5, crypt7, crypt8 and crypt12.</p>
 
 	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 	<!-- WhatsApp Viewer Banner -->
@@ -60,7 +60,8 @@
 				<li>View your WhatsApp chats on PC</li>
 				<li>Have a backup on your computer in case your phone gets lost</li>
 				<li>Conveniently read old conversations without pressing "load older messages"</li>
-				<li>Search all messages</li>
+				<li>Search messages</li>
+				<li>Export to .txt, .html, .json</li>
 				<li>No need to install Python, SQLite or additional libraries (M2Crypto)</li>
 				<li>All in a small application, no dependencies, no need to install</li>
 			</ul>
@@ -76,7 +77,11 @@
 
 		<ol>
 			<li>Get your key and database file from the phone. Easiest method I know: <a href="http://forum.xda-developers.com/showthread.php?t=2770982">http://forum.xda-developers.com/showthread.php?t=2770982</a></li>
-			<li>File -> Open; Select file msgstore.db</li>
+			<li>Open WhatsApp Viewer</li>
+			<li>File -> Open -> Select file</li>
+			<li>Select msgstore.db in the folder "extracted"</li>
+			<li>Leave account name empty, is was used for older versions of WhatsApp (crypt5)</li>
+			<li>Optional: If you want, you can import contact names from the wa.db file</li>
 			<li>Click on a chat to show the messages.</li>
 		</ol>
 
@@ -91,7 +96,8 @@
 		<ul>
 			<li>
 				<p class="question">Can I decrypt the database without the key file?</p>
-				<p>WhatsApp is able to do that, but I am not. If you have lost your phone or the key file, the backup is worthless.</p>
+				<p>WhatsApp is able to do that, but I am not. If you have lost your phone or the key file, the backup is worthless.<br>
+				Please, do NOT write me e-mails because you cannot find the key but the messages are SOO important for you. I cannot help you.</p>
 			</li>
 			<li>
 				<p class="question">What about iPhone / Blackberry?</p>
@@ -102,7 +108,7 @@
 				<p><a href="http://forum.xda-developers.com/showthread.php?t=2770982">http://forum.xda-developers.com/showthread.php?t=2770982</a></p>
 			</li>
 			<li>
-				<p class="question">How can I decrypt .crypt7 / .crypt8?</p>
+				<p class="question">How can I decrypt .crypt7 / .crypt8 /.crypt12?</p>
 				<p>First of all you either need root access to your device or get the key file using the backup method of Android (see link above).</p>
 				<p>When you got root access, you can download the file from the system memory at <span class="file">/data/data/com.whatsapp/files/key</span>. Personally, I use MyPhoneExplorer for this task and I can really recommend this tool.</p>
 				<p>Once you got both, the .crypt7 and key file, use the menu File->Decrypt .crypt7 (or .crypt8), select your files and press OK.</p>
@@ -132,15 +138,16 @@
 
 		<h3>Credits:</h3>
 		<ul>
+			<li>TripCode for crypt12 support <a href="https://github.com/EliteAndroidApps/WhatsApp-Crypt12-Decrypter">https://github.com/EliteAndroidApps</a></li>
 			<li>Whatsapp Xtract</li>
-			<li>pwncrypt5.py <a href="https://github.com/aramosf/pwncrypt5/blob/master/pwncrypt5.py">https://github.com/aramosf/pwncrypt5/blob/master/pwncrypt5.py</a></li>
+			<li>pwncrypt5.py <a href="https://github.com/aramosf/pwncrypt5/blob/master/pwncrypt5.py">https://github.com/aramosf</a></li>
 			<li>SQLite</li>
-			<li>MD5 <a href="http://bobobobo.wordpress.com/2010/10/17/md5-c-implementation/">http://bobobobo.wordpress.com/2010/10/17/md5-c-implementation/</a></li>
-			<li>UTF8 <a href="http://utfcpp.sourceforge.net/">http://utfcpp.sourceforge.net/</a></li>
+			<li>MD5 <a href="http://bobobobo.wordpress.com/2010/10/17/md5-c-implementation/">http://bobobobo.wordpress.com</a></li>
+			<li>UTF8 <a href="http://utfcpp.sourceforge.net/">http://utfcpp.sourceforge.net</a></li>
 			<li>AES <a href="https://polarssl.org/aes-source-code">https://polarssl.org/aes-source-code</a>
-			<li>Base64 <a href="http://www.adp-gmbh.ch/cpp/common/base64.html">http://www.adp-gmbh.ch/cpp/common/base64.html</a>
-			<li>Zlib <a href="http://www.zlib.net/">http://www.zlib.net/</a>
-			</li>
+			<li>Base64 <a href="http://www.adp-gmbh.ch/cpp/common/base64.html">http://www.adp-gmbh.ch</a>
+			<li>RapidJSON <a href="http://rapidjson.org/">http://rapidjson.org</a></li>
+			<li>mbedtls <a href="https://github.com/ARMmbed/mbedtls">https://github.com/ARMmbed</a></li>
 		</ul>
       </section>
     </div>
@@ -148,6 +155,7 @@
     <!-- FOOTER  -->
     <div id="footer_wrap" class="outer">
       <footer class="inner">
+        <p><a href="http://forum.xda-developers.com/showthread.php?t=2719741">XDA thread</a></p>
         <p class="copyright">WhatsApp Viewer maintained by <a href="https://github.com/andreas-mausch">andreas-mausch</a></p>
       </footer>
     </div>
