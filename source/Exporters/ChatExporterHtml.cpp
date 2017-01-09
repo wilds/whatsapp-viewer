@@ -18,8 +18,9 @@
 #include "../Settings.h"
 #include "../../resources/resource.h"
 
-ChatExporterHtml::ChatExporterHtml(Settings &settings, const std::string &templateHtml)
-	: settings(settings), templateHtml(templateHtml)
+ChatExporterHtml::ChatExporterHtml(Settings &settings, const std::string &templateHtml, const std::string &templateText, const std::string &templateAuthor, const std::string &templateImage)
+	: settings(settings), templateHtml(templateHtml), templateText(templateText), templateAuthor(templateAuthor),
+	templateImage(templateImage)
 {
 }
 
@@ -36,62 +37,154 @@ std::string ChatExporterHtml::buildMessages(WhatsappChat &chat, std::set<int> &u
 	{
 		WhatsappMessage &message = **it;
 
-		output << "<div class=\"message ";
-
-		if (message.isFromMe())
-		{
-			output << "outgoing_message";
-		}
-		else
-		{
-			output << "incoming_message";
-		}
-
-		output << "\"><div class=\"text\">";
-
 		switch (message.getMediaWhatsappType())
 		{
 			case MEDIA_WHATSAPP_TEXT:
 			{
-				output << "<span>" << convertMessageToHtml(message, usedEmoticons) << "</span>";
+				if (message.getData().size() == 0)
+					continue;
+
+				std::string text = templateText;
+
+				if (message.getRemoteResource().size() > 0)
+				{
+					std::string author = templateAuthor;
+					replacePlaceholder(templateAuthor, "%CONTACT_NAME%", settings.findDisplayName(message.getRemoteResource()));
+					replacePlaceholder(templateAuthor, "@s.whatsapp.net", "");
+					replacePlaceholder(text, "%AUTHOR%", author);
+				}
+				else {
+					replacePlaceholder(text, "%AUTHOR%", "");
+				}
+				replacePlaceholder(text, "%INOUT%", message.isFromMe() ? "out" : "in");
+				replacePlaceholder(text, "%TIME%", formatTimestamp(message.getTimestamp()));
+				replacePlaceholder(text, "%DATE%", "");
+				replacePlaceholder(text, "%DATA_ID%", "");
+				replacePlaceholder(text, "%MESSAGE%", convertMessageToHtml(message, usedEmoticons));
+				output << text << std::endl;
+
 			} break;
 			case MEDIA_WHATSAPP_IMAGE:
 			{
 				if (message.getRawDataSize() > 0 && message.getRawData() != NULL)
 				{
-					output << "<div><img src=\"data:image/jpeg;base64," << base64_encode(message.getRawData(), message.getRawDataSize()) << "\"></div>" << std::endl;
+					std::string text = templateImage;
+					if (message.getRemoteResource().size() > 0)
+					{
+						std::string author = templateAuthor;
+						replacePlaceholder(templateAuthor, "%CONTACT_NAME%", settings.findDisplayName(message.getRemoteResource()));
+						replacePlaceholder(templateAuthor, "@s.whatsapp.net", "");
+						replacePlaceholder(text, "%AUTHOR%", author);
+					}
+					else {
+						replacePlaceholder(text, "%AUTHOR%", "");
+					}
+					std::stringstream imagedata;
+					imagedata << "data:image/jpeg;base64," << base64_encode(message.getRawData(), message.getRawDataSize());
+					replacePlaceholder(text, "%INOUT%", message.isFromMe() ? "out" : "in");
+					replacePlaceholder(text, "%TIME%", formatTimestamp(message.getTimestamp()));
+					replacePlaceholder(text, "%DATE%", "");
+					replacePlaceholder(text, "%DATA_ID%", "");
+					replacePlaceholder(text, "%IMAGE_DATA%", imagedata.str());
+					replacePlaceholder(text, "%MESSAGE%", convertMessageToHtml(message, usedEmoticons));
+					output << text << std::endl;
 				}
 			} break;
+			
 			case MEDIA_WHATSAPP_AUDIO:
 			{
-				output << "<span>[ " << formatAudio(message) << " ]</span>";
+				std::string text = templateText;
+
+				if (message.getRemoteResource().size() > 0)
+				{
+					std::string author = templateAuthor;
+					replacePlaceholder(templateAuthor, "%CONTACT_NAME%", settings.findDisplayName(message.getRemoteResource()));
+					replacePlaceholder(templateAuthor, "@s.whatsapp.net", "");
+					replacePlaceholder(text, "%AUTHOR%", author);
+				}
+				else {
+					replacePlaceholder(text, "%AUTHOR%", "");
+				}
+				replacePlaceholder(text, "%INOUT%", message.isFromMe() ? "out" : "in");
+				replacePlaceholder(text, "%TIME%", formatTimestamp(message.getTimestamp()));
+				replacePlaceholder(text, "%DATE%", "");
+				replacePlaceholder(text, "%DATA_ID%", "");
+				replacePlaceholder(text, "%MESSAGE%", "[AUDIO]");
+				output << text << std::endl;
 			} break;
 			case MEDIA_WHATSAPP_VIDEO:
 			{
 				if (message.getRawDataSize() > 0 && message.getRawData() != NULL)
 				{
-					output << "<div><img src=\"data:image/jpeg;base64," << base64_encode(message.getRawData(), message.getRawDataSize()) << "\"></div>" << std::endl;
+					std::string text = templateImage;
+					if (message.getRemoteResource().size() > 0)
+					{
+						std::string author = templateAuthor;
+						replacePlaceholder(templateAuthor, "%CONTACT_NAME%", settings.findDisplayName(message.getRemoteResource()));
+						replacePlaceholder(templateAuthor, "@s.whatsapp.net", "");
+						replacePlaceholder(text, "%AUTHOR%", author);
+					}
+					else {
+						replacePlaceholder(text, "%AUTHOR%", "");
+					}
+					std::stringstream imagedata;
+					imagedata << "data:image/jpeg;base64," << base64_encode(message.getRawData(), message.getRawDataSize());
+					replacePlaceholder(text, "%INOUT%", message.isFromMe() ? "out" : "in");
+					replacePlaceholder(text, "%TIME%", formatTimestamp(message.getTimestamp()));
+					replacePlaceholder(text, "%DATE%", "");
+					replacePlaceholder(text, "%DATA_ID%", "");
+					replacePlaceholder(text, "%IMAGE_DATA%", imagedata.str());
+					replacePlaceholder(text, "%MESSAGE%", "[VIDEO]");
+					output << text << std::endl;
 				}
-				output << "<span>[ Video ]</span>";
 			} break;
 			case MEDIA_WHATSAPP_CONTACT:
 			{
-				output << "<span>[ Contact ]</span>";
+				std::string text = templateText;
+
+				if (message.getRemoteResource().size() > 0)
+				{
+					std::string author = templateAuthor;
+					replacePlaceholder(templateAuthor, "%CONTACT_NAME%", settings.findDisplayName(message.getRemoteResource()));
+					replacePlaceholder(templateAuthor, "@s.whatsapp.net", "");
+					replacePlaceholder(text, "%AUTHOR%", author);
+				}
+				else {
+					replacePlaceholder(text, "%AUTHOR%", "");
+				}
+				replacePlaceholder(text, "%INOUT%", message.isFromMe() ? "out" : "in");
+				replacePlaceholder(text, "%TIME%", formatTimestamp(message.getTimestamp()));
+				replacePlaceholder(text, "%DATE%", "");
+				replacePlaceholder(text, "%DATA_ID%", "");
+				replacePlaceholder(text, "%MESSAGE%", "[CONTACT]");
+				output << text << std::endl;
 			} break;
 			case MEDIA_WHATSAPP_LOCATION:
 			{
-				output << "<span>[ Location: " << message.getLatitude() << "; " << message.getLongitude() << " ]</span>";
+				std::string text = templateText;
+				std::stringstream data;
+				data << "[ Location: " << message.getLatitude() << "; " << message.getLongitude() << " ]";
+				if (message.getRemoteResource().size() > 0)
+				{
+					std::string author = templateAuthor;
+					replacePlaceholder(templateAuthor, "%CONTACT_NAME%", settings.findDisplayName(message.getRemoteResource()));
+					replacePlaceholder(templateAuthor, "@s.whatsapp.net", "");
+					replacePlaceholder(text, "%AUTHOR%", author);
+				}
+				else {
+					replacePlaceholder(text, "%AUTHOR%", "");
+				}
+				replacePlaceholder(text, "%INOUT%", message.isFromMe() ? "out" : "in");
+				replacePlaceholder(text, "%TIME%", formatTimestamp(message.getTimestamp()));
+				replacePlaceholder(text, "%DATE%", "");
+				replacePlaceholder(text, "%DATA_ID%", "");
+				replacePlaceholder(text, "%MESSAGE%", data.str());
+				output << text << std::endl;
+				
 			} break;
+
 		}
 
-		output << "</div>";
-
-		if (message.getRemoteResource().size() > 0)
-		{
-			output << "<div class=\"remote-resource\"><span>" << settings.findDisplayName(message.getRemoteResource()) << "</span> (<span>" << message.getRemoteResource() << "</span>)</div>";
-		}
-
-		output << "<div class=\"timestamp\"><span>" << formatTimestamp(message.getTimestamp()) << "</span></div></div>" << std::endl;
 	}
 
 	return output.str();
@@ -100,7 +193,10 @@ std::string ChatExporterHtml::buildMessages(WhatsappChat &chat, std::set<int> &u
 void ChatExporterHtml::replacePlaceholder(std::string &html, const std::string &placeholder, const std::string &text)
 {
 	int start = html.find(placeholder);
-	html.replace(start, placeholder.length(), text);
+	while (start != std::string::npos) {
+		html.replace(start, placeholder.length(), text);
+		start = html.find(placeholder);
+	}
 }
 
 std::string ChatExporterHtml::convertMessageToHtml(WhatsappMessage &message, std::set<int> &usedEmoticons)
@@ -178,7 +274,7 @@ void ChatExporterHtml::exportChat(WhatsappChat &chat, const std::string &filenam
 	std::string contact = chat.getKey();
 	if (chat.getSubject().length() > 0)
 	{
-		contact += "; " + chat.getSubject();
+		contact = chat.getSubject();
 	}
 
 	std::string contactName = chat.getDisplayName();

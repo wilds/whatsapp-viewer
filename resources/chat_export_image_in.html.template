@@ -1,0 +1,20 @@
+<div class="msg msg-group">
+  <div class="message message-chat message-%INOUT% tail message-chat">
+    <div>
+      <span class="tail-container"></span>
+      <span class="tail-container highlight"></span>
+      <div class="bubble bubble-text">
+%AUTHOR%
+        <div class="message-text" data-id="%DATA_ID%">
+          <span class="message-pre-text">[%TIME%, %DATE%]&nbsp;%CONTACT_NAME%:&nbsp;</span>
+          <span class="emojitext selectable-text" dir="ltr">%MESSAGE%</span>
+        </div>
+        <div class="message-meta">
+          <span class="hidden-token">
+            <span class="message-datetime">%DATE% %TIME%</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

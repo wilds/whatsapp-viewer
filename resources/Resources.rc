@@ -1141,6 +1141,11 @@ BEGIN
 END
 
 #endif    // Deutsch (Deutschland) resources
+IDR_HTML1               HTML                    "chat_export_image_in.html.template"
+
+IDR_HTML2               HTML                    "chat_export_image_out.html.template"
+
+IDR_HTML3               HTML                    "chat_export_text_in.html.template"
 /////////////////////////////////////////////////////////////////////////////
 
 
